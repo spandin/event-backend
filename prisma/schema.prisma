@@ -13,11 +13,11 @@ model user {
   email      String   @unique
   avatar_url String?
   created_at DateTime @default(now())
-  event      event[]
+  events     event[]
 }
 
 model event {
-  id         String   @id @default(cuid())
+  id         Int      @id @unique @default(autoincrement())
   user_id    Int
   title      String
   isActive   Boolean  @default(false)
