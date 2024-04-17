@@ -21,6 +21,12 @@ class AuthController {
       handleError(res, error);
     }
   }
+
+  login(req: Request, res: Response) {
+    res
+      .status(+StatusCode.OK)
+      .send({ user: req.user, message: ResponceMessage.LOGIN });
+  }
 }
 
 export default new AuthController();
