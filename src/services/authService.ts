@@ -22,6 +22,32 @@ class AuthService {
 
     return cleanUser(newUser);
   }
+
+  async login(email: string, password: string) {
+    const user = await userRepository.getUserByEmail(email);
+
+    if (!user) {
+      throw new Error(ResponceMessage.USER_DOESNT_EXIST);
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new Error(ResponceMessage.USER_WRONG_PASSWORD);
+    }
+
+    return cleanUser(user);
+  }
+
+  async getUser(id: number) {
+    const user = await userRepository.getUserById(id);
+
+    if (!user) {
+      throw new Error(ResponceMessage.USER_DOESNT_EXIST);
+    }
+
+    return cleanUser(user);
+  }
 }
 
 export default new AuthService();
