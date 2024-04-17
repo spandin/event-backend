@@ -13,11 +13,13 @@
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
     "@types/node": "^20.12.7",
     "@types/passport-local": "^1.0.38",
     "nodemon": "^3.1.0",
