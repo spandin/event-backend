@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import routes from './routers';
 import session from 'express-session';
+import './strategies/local-strategy';
 import { PORT, SESSION_MAX_AGE, SESSION_SECRET } from './constants';
 
 const SERVER_PORT = process.env.PORT || PORT;
