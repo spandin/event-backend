@@ -9,8 +9,8 @@ datasource db {
 
 model user {
   id         Int      @id @unique @default(autoincrement())
-  name       String
   email      String   @unique
+  password   String 
   avatar_url String?
   created_at DateTime @default(now())
   events     event[]
