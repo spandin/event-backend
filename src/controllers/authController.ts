@@ -27,6 +27,12 @@ class AuthController {
       .status(+StatusCode.OK)
       .send({ user: req.user, message: ResponceMessage.LOGIN });
   }
+
+  logout(req: Request, res: Response) {
+    req.logout(() => {
+      res.status(+StatusCode.OK).send(ResponceMessage.LOGOUT);
+    });
+  }
 }
 
 export default new AuthController();
