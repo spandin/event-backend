@@ -9,7 +9,7 @@ import { Profile } from 'passport-google-oauth20';
 import googleUserRepository from '../repositories/googleUserRepository';
 
 class AuthService {
-  async register(email: string, password: string) {
+  async registerLocalUser(email: string, password: string) {
     const user = await userRepository.getByEmail(email);
 
     if (user) {

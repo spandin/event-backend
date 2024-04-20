@@ -14,7 +14,7 @@ class AuthController {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS);
       }
 
-      const user = await authService.register(email, password);
+      const user = await authService.registerLocalUser(email, password);
 
       res.status(+StatusCode.OK).send(user);
     } catch (error) {
