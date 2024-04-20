@@ -7,7 +7,7 @@ import { registrationSchema } from '../schemas';
 import isDataValid from '../utils/isDataValid';
 
 class AuthController {
-  async register(req: Request, res: Response) {
+  async registerLocalUser(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
       if (!isDataValid(registrationSchema, { email, password })) {

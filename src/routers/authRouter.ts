@@ -5,7 +5,7 @@ import { isUserAuthenticated } from '../middleware/isUserAuthenticated';
 
 const authRouter = express.Router();
 
-authRouter.post('/register', authController.register);
+authRouter.post('/register', authController.registerLocalUser);
 authRouter.post(
   '/login',
   passport.authenticate('local'),
