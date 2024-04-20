@@ -4,6 +4,7 @@ import routes from './routers';
 import session from 'express-session';
 import cors from 'cors';
 import './strategies/local-strategy';
+import './strategies/google-strategy';
 import { PORT, SESSION_MAX_AGE, SESSION_SECRET } from './constants';
 
 const SERVER_PORT = process.env.PORT || PORT;
