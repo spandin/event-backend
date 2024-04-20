@@ -1,6 +1,6 @@
 declare namespace Express {
   interface User {
-    id: number;
+    id: string;
     email: string;
   }
 }
