@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import routes from './routers';
 import session from 'express-session';
+import cors from 'cors';
 import './strategies/local-strategy';
 import { PORT, SESSION_MAX_AGE, SESSION_SECRET } from './constants';
 
@@ -10,6 +11,14 @@ const SERVER_PORT = process.env.PORT || PORT;
 const initialize = () => {
   const app = express();
 
+  app.use(
+    cors({
+      origin: ['http://localhost:5173'],
+      optionsSuccessStatus: 200,
+      credentials: true,
+      preflightContinue: true,
+    })
+  );
   app.use(express.json());
 
   app.use(
