@@ -4,10 +4,11 @@ import { StatusCode, ResponceMessage } from '../enums';
 import { SALT_ROUNDS } from '../constants';
 import userRepository from '../repositories/userRepository';
 import cleanUser from '../utils/cleanUser';
+import localUserRepository from '../repositories/localUserRepository';
 
 class AuthService {
   async register(email: string, password: string) {
-    const user = await userRepository.getUserByEmail(email);
+    const user = await userRepository.getByEmail(email);
 
     if (user) {
       throw new ApiError(
@@ -18,29 +19,37 @@ class AuthService {
 
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const newUser = await userRepository.createUser(email, hash);
+    const newUser = await userRepository.create(email);
+    await localUserRepository.create(newUser.id, hash);
 
     return cleanUser(newUser);
   }
 
   async login(email: string, password: string) {
-    const user = await userRepository.getUserByEmail(email);
+    const user = await userRepository.getByEmail(email);
 
     if (!user) {
       throw new Error(ResponceMessage.USER_DOESNT_EXIST);
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!user.local_user) {
+      throw new Error(ResponceMessage.USER_WRONG_CREDENTIALS);
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.local_user.password
+    );
 
     if (!isPasswordValid) {
-      throw new Error(ResponceMessage.USER_WRONG_PASSWORD);
+      throw new Error(ResponceMessage.USER_WRONG_CREDENTIALS);
     }
 
     return cleanUser(user);
   }
 
-  async getUser(id: number) {
-    const user = await userRepository.getUserById(id);
+  async getUser(id: string) {
+    const user = await userRepository.getById(id);
 
     if (!user) {
       throw new Error(ResponceMessage.USER_DOESNT_EXIST);
