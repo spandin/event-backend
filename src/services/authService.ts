@@ -5,6 +5,8 @@ import { SALT_ROUNDS } from '../constants';
 import userRepository from '../repositories/userRepository';
 import cleanUser from '../utils/cleanUser';
 import localUserRepository from '../repositories/localUserRepository';
+import { Profile } from 'passport-google-oauth20';
+import googleUserRepository from '../repositories/googleUserRepository';
 
 class AuthService {
   async register(email: string, password: string) {
@@ -43,6 +45,22 @@ class AuthService {
 
     if (!isPasswordValid) {
       throw new Error(ResponceMessage.USER_WRONG_CREDENTIALS);
+    }
+
+    return cleanUser(user);
+  }
+
+  async authentificateGoogleUser(profile: Profile) {
+    const { id: google_id, emails } = profile;
+    const email = emails![0].value;
+
+    const user = await userRepository.getByGoogleId(google_id);
+
+    if (!user) {
+      const newUser = await userRepository.create(email);
+      await googleUserRepository.create(newUser.id, google_id);
+
+      return cleanUser(newUser);
     }
 
     return cleanUser(user);
