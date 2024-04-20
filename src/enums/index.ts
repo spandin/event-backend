@@ -11,7 +11,7 @@ export const enum StatusCode {
 export const enum ResponceMessage {
   USER_ALREADY_EXISTS = 'This email is already in use',
   USER_DOESNT_EXIST = 'This user is not registered',
-  USER_WRONG_PASSWORD = 'This password is incorrect',
+  USER_WRONG_CREDENTIALS = 'The passes credentials are incorrect',
   WRONG_PROPS = 'Required properties are either not passed or have wrong format',
   UNAUTHORIZED = 'User not authorized',
   LOGIN = 'You have successfully logged in',
