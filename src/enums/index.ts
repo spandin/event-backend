@@ -5,7 +5,7 @@ export const enum StatusCode {
   FORBIDDEN = '403',
   NOT_FOUND = '404',
   CONFLICT = '409',
-  SERVER_ERROR = '500',
+  SERVER_ERROR = '500'
 }
 
 export const enum ResponceMessage {
@@ -15,5 +15,5 @@ export const enum ResponceMessage {
   WRONG_PROPS = 'Required properties are either not passed or have wrong format',
   UNAUTHORIZED = 'User not authorized',
   LOGIN = 'You have successfully logged in',
-  LOGOUT = 'You have successfully logged out',
+  LOGOUT = 'You have successfully logged out'
 }

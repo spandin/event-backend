@@ -1,11 +1,11 @@
-import { StatusCode } from '../enums';
+import { StatusCode } from '../enums'
 
 class ApiError extends Error {
-  status: number;
+  status: number
   constructor(status: StatusCode, message: string) {
-    super(message);
-    this.status = +status;
+    super(message)
+    this.status = +status
   }
 }
 
-export default ApiError;
+export default ApiError

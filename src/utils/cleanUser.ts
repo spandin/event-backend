@@ -1,11 +1,11 @@
-import { user as IUser } from '@prisma/client';
+import { user as IUser } from '@prisma/client'
 
 export default (user: IUser) => {
-  const { id, email, avatar_url } = user;
+  const { id, email, avatar_url } = user
 
   return {
     id,
     email,
-    avatar_url,
-  };
-};
+    avatar_url
+  }
+}
