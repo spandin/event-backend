@@ -9,9 +9,9 @@ passport.serializeUser((user, done) => {
   return done(null, user.id);
 });
 
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await authService.getUser(id);
+    const user = await authService.getAuthenticatedUser(id);
 
     return done(null, user);
   } catch (error) {
@@ -27,7 +27,6 @@ passport.use(
       }
 
       const user = await authService.login(email, password);
-
       return done(null, user);
     } catch (error) {
       if (error instanceof Error) return done(error.message);

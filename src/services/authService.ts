@@ -66,7 +66,7 @@ class AuthService {
     return cleanUser(user);
   }
 
-  async getUser(id: string) {
+  async getAuthenticatedUser(id: string) {
     const user = await userRepository.getById(id);
 
     if (!user) {
