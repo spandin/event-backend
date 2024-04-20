@@ -22,16 +22,24 @@ class AuthController {
     }
   }
 
-  login(req: Request, res: Response) {
-    res
-      .status(+StatusCode.OK)
-      .send({ user: req.user, message: ResponceMessage.LOGIN });
+  logout(req: Request, res: Response) {
+    try {
+      req.logout(() => {
+        res.status(+StatusCode.OK).send(ResponceMessage.LOGOUT);
+      });
+    } catch (error) {
+      handleError(res, error);
+    }
   }
 
-  logout(req: Request, res: Response) {
-    req.logout(() => {
-      res.status(+StatusCode.OK).send(ResponceMessage.LOGOUT);
-    });
+  getAuthentificatedUser(req: Request, res: Response) {
+    try {
+      res
+        .status(+StatusCode.OK)
+        .send({ user: req.user, message: ResponceMessage.LOGIN });
+    } catch (error) {
+      handleError(res, error);
+    }
   }
 }
 
