@@ -5,7 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon --exec node --loader ts-node/esm src/index.ts"
+    "dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
+    "lint": "eslint --fix src",
+    "format": "prettier --write src",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
