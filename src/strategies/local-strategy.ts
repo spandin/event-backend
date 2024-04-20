@@ -26,7 +26,7 @@ passport.use(
         throw new Error(ResponceMessage.WRONG_PROPS);
       }
 
-      const user = await authService.login(email, password);
+      const user = await authService.loginLocalUser(email, password);
       return done(null, user);
     } catch (error) {
       if (error instanceof Error) return done(error.message);

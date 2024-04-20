@@ -27,7 +27,7 @@ class AuthService {
     return cleanUser(newUser);
   }
 
-  async login(email: string, password: string) {
+  async loginLocalUser(email: string, password: string) {
     const user = await userRepository.getByEmail(email);
 
     if (!user) {
