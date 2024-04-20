@@ -1,11 +1,13 @@
-import { Response } from 'express'
+import { Response, Request, NextFunction } from 'express'
 import { StatusCode } from '../enums'
-import ApiError from './apiError'
+import ApiError from '../utils/apiError'
 
-export default (res: Response, error: unknown): void => {
+export default (error: Error, req: Request, res: Response, next: NextFunction): void => {
   if (error instanceof ApiError) {
     res.status(error.status).send({ message: error.message })
-  } else if (error instanceof Error) {
+  } else {
     res.status(+StatusCode.SERVER_ERROR).send({ message: error.message })
   }
+
+  next()
 }

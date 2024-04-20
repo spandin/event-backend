@@ -29,7 +29,7 @@ passport.use(
       const user = await authService.loginLocalUser(email, password)
       return done(null, user)
     } catch (error) {
-      if (error instanceof Error) return done(error.message)
+      if (error instanceof Error) return done(error)
     }
   })
 )
