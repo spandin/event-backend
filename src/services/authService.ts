@@ -27,18 +27,14 @@ class AuthService {
   async loginLocalUser(email: string, password: string) {
     const user = await userRepository.getByEmail(email)
 
-    if (!user) {
-      throw new Error(ResponceMessage.USER_DOESNT_EXIST)
-    }
-
-    if (!user.local_user) {
-      throw new Error(ResponceMessage.USER_WRONG_CREDENTIALS)
+    if (!user || !user.local_user) {
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.local_user.password)
 
     if (!isPasswordValid) {
-      throw new Error(ResponceMessage.USER_WRONG_CREDENTIALS)
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_WRONG_CREDENTIALS)
     }
 
     return cleanUser(user)
@@ -64,7 +60,7 @@ class AuthService {
     const user = await userRepository.getById(id)
 
     if (!user) {
-      throw new Error(ResponceMessage.USER_DOESNT_EXIST)
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
     }
 
     return cleanUser(user)
