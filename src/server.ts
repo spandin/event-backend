@@ -5,23 +5,16 @@ import session from 'express-session'
 import cors from 'cors'
 import './strategies/local-strategy'
 import './strategies/google-strategy'
-import { SESSION_MAX_AGE } from './constants'
+import { SESSION_MAX_AGE, CORS_CONFIG } from './constants'
 
 const server = express()
 
-server.use(
-  cors({
-    origin: ['http://localhost:5173'],
-    optionsSuccessStatus: 200,
-    credentials: true,
-    preflightContinue: true
-  })
-)
+server.use(cors(CORS_CONFIG))
 server.use(express.json())
 
 server.use(
   session({
-    secret: process.env.SESSION_SECRET!,
+    secret: process.env.SESSION_SECRET || '',
     saveUninitialized: false,
     resave: false,
     cookie: {
