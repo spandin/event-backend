@@ -15,5 +15,6 @@ export const enum ResponceMessage {
   WRONG_PROPS = 'Required properties are either not passed or have wrong format',
   UNAUTHORIZED = 'User not authorized',
   LOGIN = 'You have successfully logged in',
+  REGISTER = 'You have successfully registered',
   LOGOUT = 'You have successfully logged out'
 }
