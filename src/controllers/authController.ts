@@ -13,9 +13,9 @@ class AuthController {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
-      const user = await authService.registerLocalUser(email, password)
+      await authService.registerLocalUser(email, password)
 
-      res.status(+StatusCode.OK).send(user)
+      res.status(+StatusCode.OK).send({ message: ResponceMessage.REGISTER })
     } catch (error) {
       next(error)
     }
@@ -24,7 +24,7 @@ class AuthController {
   logout(req: Request, res: Response, next: NextFunction) {
     try {
       req.logout(() => {
-        res.status(+StatusCode.OK).send(ResponceMessage.LOGOUT)
+        res.status(+StatusCode.OK).send({ message: ResponceMessage.LOGOUT })
       })
     } catch (error) {
       next(error)
@@ -33,7 +33,7 @@ class AuthController {
 
   getAuthentificatedUser(req: Request, res: Response, next: NextFunction) {
     try {
-      res.status(+StatusCode.OK).send({ user: req.user, message: ResponceMessage.LOGIN })
+      res.status(+StatusCode.OK).send({ data: { user: req.user }, message: ResponceMessage.LOGIN })
     } catch (error) {
       next(error)
     }
