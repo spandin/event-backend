@@ -5,7 +5,7 @@ import session from 'express-session'
 import cors from 'cors'
 import './strategies/local-strategy'
 import './strategies/google-strategy'
-import { SESSION_MAX_AGE, SESSION_SECRET } from './constants'
+import { SESSION_MAX_AGE } from './constants'
 
 const server = express()
 
@@ -21,7 +21,7 @@ server.use(express.json())
 
 server.use(
   session({
-    secret: process.env.SESSION_SECRET || SESSION_SECRET,
+    secret: process.env.SESSION_SECRET!,
     saveUninitialized: false,
     resave: false,
     cookie: {
