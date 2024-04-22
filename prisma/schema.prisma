@@ -8,17 +8,30 @@ datasource db {
 }
 
 model user {
-  id         Int      @id @unique @default(autoincrement())
+  id         String      @id @unique @default(uuid())
   email      String   @unique
-  password   String
   avatar_url String?
   created_at DateTime @default(now())
   events     event[]
+  google_user google_user?
+  local_user  local_user?
+}
+
+model local_user {
+  user_id String @unique
+  password   String
+  user user @relation(fields: [user_id], references: [id])
+}
+
+model google_user {
+  google_id String @unique
+  user_id String @unique
+  user user @relation(fields: [user_id], references: [id])
 }
 
 model event {
   id         Int      @id @unique @default(autoincrement())
-  user_id    Int
+  user_id    String 
   title      String
   isActive   Boolean  @default(false)
   created_at DateTime @db.Timestamp

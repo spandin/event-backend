@@ -1,36 +1,36 @@
-import passport from 'passport';
-import { Strategy } from 'passport-local';
-import { ResponceMessage } from '../enums';
-import isDataValid from '../utils/isDataValid';
-import { loginSchema } from '../schemas';
-import authService from '../services/authService';
+import passport from 'passport'
+import { Strategy } from 'passport-local'
+import { ResponceMessage, StatusCode } from '../enums'
+import isDataValid from '../utils/isDataValid'
+import { loginSchema } from '../schemas'
+import authService from '../services/authService'
+import ApiError from '../utils/apiError'
 
 passport.serializeUser((user, done) => {
-  return done(null, user.id);
-});
+  return done(null, user.id)
+})
 
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await authService.getUser(id);
+    const user = await authService.getAuthenticatedUser(id)
 
-    return done(null, user);
+    return done(null, user)
   } catch (error) {
-    return done(error, false);
+    return done(error)
   }
-});
+})
 
 passport.use(
   new Strategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
       if (!isDataValid(loginSchema, { email, password })) {
-        throw new Error(ResponceMessage.WRONG_PROPS);
+        throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
-      const user = await authService.login(email, password);
-
-      return done(null, user);
+      const user = await authService.loginLocalUser(email, password)
+      return done(null, user)
     } catch (error) {
-      if (error instanceof Error) return done(error.message);
+      if (error instanceof Error) return done(error)
     }
   })
-);
+)

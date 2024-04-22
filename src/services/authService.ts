@@ -1,53 +1,70 @@
-import bcrypt from 'bcrypt';
-import ApiError from '../utils/apiError';
-import { StatusCode, ResponceMessage } from '../enums';
-import { SALT_ROUNDS } from '../constants';
-import userRepository from '../repositories/userRepository';
-import cleanUser from '../utils/cleanUser';
+import bcrypt from 'bcrypt'
+import ApiError from '../utils/apiError'
+import { StatusCode, ResponceMessage } from '../enums'
+import { SALT_ROUNDS } from '../constants'
+import userRepository from '../repositories/userRepository'
+import cleanUser from '../utils/cleanUser'
+import localUserRepository from '../repositories/localUserRepository'
+import { Profile } from 'passport-google-oauth20'
+import googleUserRepository from '../repositories/googleUserRepository'
 
 class AuthService {
-  async register(email: string, password: string) {
-    const user = await userRepository.getUserByEmail(email);
+  async registerLocalUser(email: string, password: string) {
+    const user = await userRepository.getByEmail(email)
 
     if (user) {
-      throw new ApiError(
-        StatusCode.CONFLICT,
-        ResponceMessage.USER_ALREADY_EXISTS
-      );
+      throw new ApiError(StatusCode.CONFLICT, ResponceMessage.USER_ALREADY_EXISTS)
     }
 
-    const hash = await bcrypt.hash(password, SALT_ROUNDS);
+    const hash = await bcrypt.hash(password, SALT_ROUNDS)
 
-    const newUser = await userRepository.createUser(email, hash);
+    const newUser = await userRepository.create(email)
+    await localUserRepository.create(newUser.id, hash)
 
-    return cleanUser(newUser);
+    return cleanUser(newUser)
   }
 
-  async login(email: string, password: string) {
-    const user = await userRepository.getUserByEmail(email);
+  async loginLocalUser(email: string, password: string) {
+    const user = await userRepository.getByEmail(email)
 
-    if (!user) {
-      throw new Error(ResponceMessage.USER_DOESNT_EXIST);
+    if (!user || !user.local_user) {
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.local_user.password)
 
     if (!isPasswordValid) {
-      throw new Error(ResponceMessage.USER_WRONG_PASSWORD);
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_WRONG_CREDENTIALS)
     }
 
-    return cleanUser(user);
+    return cleanUser(user)
   }
 
-  async getUser(id: number) {
-    const user = await userRepository.getUserById(id);
+  async authentificateGoogleUser(profile: Profile) {
+    const { id: google_id, emails } = profile
+    const email = emails![0].value
+
+    const user = await userRepository.getByGoogleId(google_id)
 
     if (!user) {
-      throw new Error(ResponceMessage.USER_DOESNT_EXIST);
+      const newUser = await userRepository.create(email)
+      await googleUserRepository.create(newUser.id, google_id)
+
+      return cleanUser(newUser)
     }
 
-    return cleanUser(user);
+    return cleanUser(user)
+  }
+
+  async getAuthenticatedUser(id: string) {
+    const user = await userRepository.getById(id)
+
+    if (!user) {
+      throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
+    }
+
+    return cleanUser(user)
   }
 }
 
-export default new AuthService();
+export default new AuthService()
