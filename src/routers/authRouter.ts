@@ -6,9 +6,9 @@ import { isUserAuthenticated } from '../middleware/isUserAuthenticated'
 const authRouter = express.Router()
 
 authRouter.post('/register', authController.registerLocalUser)
-authRouter.post('/login', passport.authenticate('local', { successRedirect: '/' }))
+authRouter.post('/login', passport.authenticate('local'), authController.getAuthentificatedUser)
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-authRouter.get('/google/callback', passport.authenticate('google', { successRedirect: '/' }))
+authRouter.get('/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:5173' }))
 authRouter.get('/user', isUserAuthenticated, authController.getAuthentificatedUser)
 authRouter.delete('/logout', isUserAuthenticated, authController.logout)
 
