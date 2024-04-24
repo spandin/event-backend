@@ -5,23 +5,13 @@ import session from 'express-session'
 import cors from 'cors'
 import './strategies/local-strategy'
 import './strategies/google-strategy'
-import { SESSION_MAX_AGE, CORS_CONFIG } from './constants'
-
+import { SESSION_CONFIG, CORS_CONFIG } from './config'
 const server = express()
 
 server.use(cors(CORS_CONFIG))
 server.use(express.json())
 
-server.use(
-  session({
-    secret: process.env.SESSION_SECRET || '',
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-      maxAge: SESSION_MAX_AGE
-    }
-  })
-)
+server.use(session(SESSION_CONFIG))
 
 server.use(passport.initialize())
 server.use(passport.session())
