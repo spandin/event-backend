@@ -7,8 +7,7 @@ export const SESSION_CONFIG: SessionOptions = {
   saveUninitialized: false,
   resave: false,
   cookie: {
-    maxAge: SESSION_MAX_AGE,
-    sameSite: 'none'
+    maxAge: SESSION_MAX_AGE
   }
 }
 
