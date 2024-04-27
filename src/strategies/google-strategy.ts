@@ -1,6 +1,6 @@
 import passport from 'passport'
 import { Strategy } from 'passport-google-oauth20'
-import authService from '../services/authService'
+import authService from '../services/authService.js'
 
 passport.use(
   new Strategy(

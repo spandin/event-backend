@@ -1,5 +1,5 @@
-import server from './server'
-import { PORT } from './constants'
+import server from './server.js'
+import { PORT } from './constants/index.js'
 
 const SERVER_PORT = process.env.PORT || PORT
 

@@ -1,4 +1,4 @@
-import prisma from '../prisma'
+import prisma from '../prisma.js'
 import { local_user } from '@prisma/client'
 
 class LocalUserRepository {

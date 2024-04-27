@@ -1,4 +1,4 @@
-import { StatusCode } from '../enums'
+import { StatusCode } from '../enums/index.js'
 
 class ApiError extends Error {
   status: number

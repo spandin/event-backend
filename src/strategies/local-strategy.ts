@@ -1,10 +1,10 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
-import { ResponceMessage, StatusCode } from '../enums'
-import isDataValid from '../utils/isDataValid'
-import { loginSchema } from '../schemas'
-import authService from '../services/authService'
-import ApiError from '../utils/apiError'
+import { ResponceMessage, StatusCode } from '../enums/index.js'
+import isDataValid from '../utils/isDataValid.js'
+import { loginSchema } from '../schemas/index.js'
+import authService from '../services/authService.js'
+import ApiError from '../utils/apiError.js'
 
 passport.serializeUser((user, done) => {
   return done(null, user.id)

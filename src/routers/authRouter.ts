@@ -1,8 +1,8 @@
 import express from 'express'
-import authController from '../controllers/authController'
+import authController from '../controllers/authController.js'
 import passport from 'passport'
-import { isUserAuthenticated } from '../middleware/isUserAuthenticated'
-import { CLIENT_BASE_URL } from '../constants'
+import { isUserAuthenticated } from '../middleware/isUserAuthenticated.js'
+import { CLIENT_BASE_URL } from '../constants/index.js'
 
 const authRouter = express.Router()
 

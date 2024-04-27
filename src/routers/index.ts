@@ -1,6 +1,6 @@
 import express from 'express'
-import authRouter from './authRouter'
-import errorHandler from '../middleware/errorHandler'
+import authRouter from './authRouter.js'
+import errorHandler from '../middleware/errorHandler.js'
 
 const routes = express.Router()
 routes.use('/auth', authRouter)

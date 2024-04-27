@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import ApiError from '../utils/apiError'
-import { ResponceMessage, StatusCode } from '../enums'
-import authService from '../services/authService'
-import { registrationSchema } from '../schemas'
-import isDataValid from '../utils/isDataValid'
+import ApiError from '../utils/apiError.js'
+import { ResponceMessage, StatusCode } from '../enums/index.js'
+import authService from '../services/authService.js'
+import { registrationSchema } from '../schemas/index.js'
+import isDataValid from '../utils/isDataValid.js'
 
 class AuthController {
   async registerLocalUser(req: Request, res: Response, next: NextFunction) {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { ResponceMessage, StatusCode } from '../enums'
-import ApiError from '../utils/apiError'
+import { ResponceMessage, StatusCode } from '../enums/index.js'
+import ApiError from '../utils/apiError.js'
 
 export const isUserAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (!req.isAuthenticated()) {

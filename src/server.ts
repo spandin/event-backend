@@ -1,11 +1,11 @@
 import express from 'express'
 import passport from 'passport'
-import routes from './routers'
+import routes from './routers/index.js'
 import session from 'express-session'
 import cors from 'cors'
-import './strategies/local-strategy'
-import './strategies/google-strategy'
-import { SESSION_CONFIG, CORS_CONFIG } from './config'
+import './strategies/local-strategy.js'
+import './strategies/google-strategy.js'
+import { SESSION_CONFIG, CORS_CONFIG } from './config.js'
 const server = express()
 
 server.use(cors(CORS_CONFIG))
