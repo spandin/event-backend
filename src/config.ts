@@ -11,7 +11,8 @@ export const SESSION_CONFIG: SessionOptions = {
   cookie: {
     maxAge: SESSION_MAX_AGE
   },
-  store: new PrismaSessionStore(prisma, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  store: new PrismaSessionStore(prisma as any, {
     dbRecordIdIsSessionId: true,
     dbRecordIdFunction: undefined
   })
