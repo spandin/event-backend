@@ -19,6 +19,8 @@ export const SESSION_CONFIG: SessionOptions = {
 }
 
 export const CORS_CONFIG: CorsOptions = {
-  origin: [CLIENT_BASE_URL],
-  credentials: true
+  origin: CLIENT_BASE_URL,
+  credentials: true,
+  optionsSuccessStatus: 200,
+  preflightContinue: true
 }
