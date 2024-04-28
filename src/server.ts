@@ -10,6 +10,8 @@ import memorystore from 'memorystore'
 
 const server = express()
 
+server.enable('trust proxy')
+
 server.use(cors(CORS_CONFIG))
 server.use(express.json())
 

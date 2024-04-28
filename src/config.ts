@@ -7,7 +7,13 @@ export const SESSION_CONFIG: SessionOptions = {
   saveUninitialized: false,
   resave: false,
   cookie: {
-    maxAge: SESSION_MAX_AGE
+    maxAge: SESSION_MAX_AGE,
+    ...(process.env.NODE_ENV === 'production'
+      ? {
+          secure: true,
+          sameSite: 'none'
+        }
+      : {})
   }
 }
 
