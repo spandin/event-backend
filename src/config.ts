@@ -1,6 +1,6 @@
 import { CorsOptions } from 'cors'
 import { SessionOptions } from 'express-session'
-import { SESSION_MAX_AGE, CLIENT_BASE_URL } from './constants/index.js'
+import { SESSION_MAX_AGE, CLIENT_ORIGINS } from './constants/index.js'
 
 export const SESSION_CONFIG: SessionOptions = {
   secret: process.env.SESSION_SECRET || '',
@@ -18,7 +18,7 @@ export const SESSION_CONFIG: SessionOptions = {
 }
 
 export const CORS_CONFIG: CorsOptions = {
-  origin: CLIENT_BASE_URL,
+  origin: CLIENT_ORIGINS,
   credentials: true,
   optionsSuccessStatus: 200,
   preflightContinue: true
