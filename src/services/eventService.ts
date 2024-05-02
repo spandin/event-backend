@@ -7,6 +7,16 @@ import { CreateEvent } from '../types/index.js'
 import ApiError from '../utils/apiError.js'
 
 class EventService {
+  async getEventByEventId(event_id: string) {
+    const event = await eventRepository.getOneByEventId(event_id)
+
+    if (!event) {
+      throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.EVENT_DOESNT_EXIST)
+    }
+
+    return event
+  }
+
   async getEventsByUserId(user_id: string) {
     const events = await eventRepository.getAllByUserId(user_id)
     return events
