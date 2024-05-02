@@ -66,7 +66,7 @@ class EventController {
 
       const validation = updateEventSchema.safeParse(data)
 
-      if (!validation.success) {
+      if (Object.keys(data).length === 0 || !validation.success) {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
