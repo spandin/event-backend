@@ -29,9 +29,9 @@ class EventController {
 
   async createEvent(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, location } = req.body
+      const { title, description, location, date } = req.body
 
-      const validation = createEventSchema.safeParse({ title, description, location })
+      const validation = createEventSchema.safeParse({ title, description, location, date })
 
       if (!validation.success) {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)

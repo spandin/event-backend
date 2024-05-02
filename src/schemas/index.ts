@@ -14,13 +14,13 @@ export const createEventSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   location: z.string().optional(),
-  date: z.date()
+  date: z.coerce.date()
 })
 
 export const updateEventSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   location: z.string().optional(),
-  date: z.date().optional(),
+  date: z.coerce.date().optional(),
   isActive: z.boolean().optional()
 })
