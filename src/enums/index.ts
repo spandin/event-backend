@@ -25,5 +25,7 @@ export const enum ResponceMessage {
   EVENT_UPDATED = 'Event successfully updated',
   EVENT_DOESNT_EXIST = `Event doesn't exist`,
   EVENT_USER_ALREADY_MEMBER = 'User is already a member',
-  EVENT_USER_NOT_MEMBER = 'User is not a member'
+  EVENT_USER_NOT_MEMBER = 'User is not a member',
+  EVENT_MEMBER_ADDED = 'User is successfully added as a member',
+  EVENT_MEMBER_DELETED = 'User is successfully deleted as a member'
 }
