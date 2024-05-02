@@ -3,9 +3,18 @@ import prisma from '../prisma.js'
 import eventMemberRepository from '../repositories/eventMemberRepository.js'
 import eventRepository from '../repositories/eventRepository.js'
 import userRepository from '../repositories/userRepository.js'
+import { CreateEvent } from '../types/index.js'
 import ApiError from '../utils/apiError.js'
 
 class EventService {
+  async createEvent(creator_id: string, data: CreateEvent) {
+    const event = await eventRepository.createOne({ creator_id, ...data })
+
+    await this.addMemberToEvent(creator_id, event.id)
+
+    return event
+  }
+
   async addMemberToEvent(event_id: string, user_id: string) {
     const isUserAMember = await this.isUserAMember(event_id, user_id)
 
