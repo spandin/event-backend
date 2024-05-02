@@ -24,7 +24,7 @@ class EventMemberRepository {
     })
   }
 
-  createOne(user_id: string, event_id: string) {
+  createOne(event_id: string, user_id: string) {
     return prisma.event_member.create({
       data: {
         user_id,
@@ -34,7 +34,7 @@ class EventMemberRepository {
   }
 
   updateOneByEventIdAndUserId(event_id: string, user_id: string, data: Partial<event_member>) {
-    return prisma.event_member.update({
+    return prisma.event_member.updateMany({
       where: {
         event_id,
         user_id
@@ -60,7 +60,7 @@ class EventMemberRepository {
   }
 
   deleteOneByEventIdAndUserId(event_id: string, user_id: string) {
-    return prisma.event_member.delete({
+    return prisma.event_member.deleteMany({
       where: {
         event_id,
         user_id
