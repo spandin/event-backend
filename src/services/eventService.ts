@@ -3,7 +3,7 @@ import prisma from '../prisma.js'
 import eventMemberRepository from '../repositories/eventMemberRepository.js'
 import eventRepository from '../repositories/eventRepository.js'
 import userRepository from '../repositories/userRepository.js'
-import { CreateEvent } from '../types/index.js'
+import { CreateEvent, UpdateEvent } from '../types/index.js'
 import ApiError from '../utils/apiError.js'
 
 class EventService {
@@ -30,6 +30,28 @@ class EventService {
     return event
   }
 
+  async deleteEvent(event_id: string) {
+    const event = await eventRepository.getOneByEventId(event_id)
+
+    if (!event) {
+      throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.EVENT_DOESNT_EXIST)
+    }
+
+    await prisma.$transaction([eventMemberRepository.deleteAllByEventId(event_id), eventRepository.deleteOne(event_id)])
+  }
+
+  async updateEvent(event_id: string, data: UpdateEvent) {
+    const event = await eventRepository.getOneByEventId(event_id)
+
+    if (!event) {
+      throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.EVENT_DOESNT_EXIST)
+    }
+
+    const updatedEvent = await eventRepository.updateOne(event_id, data)
+
+    return updatedEvent
+  }
+
   async addMemberToEvent(event_id: string, user_id: string) {
     const isUserAMember = await this.isUserAMember(event_id, user_id)
 
@@ -38,6 +60,18 @@ class EventService {
     }
 
     const eventMember = await eventMemberRepository.createOne(user_id, event_id)
+
+    return eventMember
+  }
+
+  async deleteMemberFromEvent(event_id: string, user_id: string) {
+    const isUserAMember = await this.isUserAMember(event_id, user_id)
+
+    if (!isUserAMember) {
+      throw new ApiError(StatusCode.CONFLICT, ResponceMessage.EVENT_USER_NOT_MEMBER)
+    }
+
+    const eventMember = await eventMemberRepository.deleteOneByEventIdAndUserId(event_id, user_id)
 
     return eventMember
   }
