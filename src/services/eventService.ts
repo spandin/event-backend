@@ -7,6 +7,11 @@ import { CreateEvent } from '../types/index.js'
 import ApiError from '../utils/apiError.js'
 
 class EventService {
+  async getEventsByUserId(user_id: string) {
+    const events = await eventRepository.getAllByUserId(user_id)
+    return events
+  }
+
   async createEvent(creator_id: string, data: CreateEvent) {
     const event = await eventRepository.createOne({ creator_id, ...data })
 
