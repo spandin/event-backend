@@ -2,8 +2,8 @@ import prisma from '../prisma.js'
 import { user } from '@prisma/client'
 
 class UserRepository {
-  getByEmail(email: string) {
-    return prisma.user.findFirst({
+  getOneByEmail(email: string) {
+    return prisma.user.findUnique({
       where: {
         email
       },
@@ -14,7 +14,7 @@ class UserRepository {
     })
   }
 
-  getById(id: string) {
+  getOneById(id: string) {
     return prisma.user.findUnique({
       where: {
         id
@@ -26,7 +26,7 @@ class UserRepository {
     })
   }
 
-  getByGoogleId(google_id: string) {
+  getOneByGoogleId(google_id: string) {
     return prisma.user.findFirst({
       where: {
         google_user: {
@@ -40,7 +40,7 @@ class UserRepository {
     })
   }
 
-  create(email: string) {
+  createOne(email: string) {
     return prisma.user.create({
       data: {
         email
@@ -48,7 +48,7 @@ class UserRepository {
     })
   }
 
-  update(id: string, user: Partial<user>) {
+  updateOne(id: string, user: Partial<user>) {
     return prisma.user.update({
       where: {
         id

@@ -10,7 +10,7 @@ import googleUserRepository from '../repositories/googleUserRepository.js'
 
 class AuthService {
   async registerLocalUser(email: string, password: string) {
-    const user = await userRepository.getByEmail(email)
+    const user = await userRepository.getOneByEmail(email)
 
     if (user) {
       throw new ApiError(StatusCode.CONFLICT, ResponceMessage.USER_ALREADY_EXISTS)
@@ -18,14 +18,14 @@ class AuthService {
 
     const hash = await bcrypt.hash(password, SALT_ROUNDS)
 
-    const newUser = await userRepository.create(email)
-    await localUserRepository.create(newUser.id, hash)
+    const newUser = await userRepository.createOne(email)
+    await localUserRepository.createOne(newUser.id, hash)
 
     return cleanUser(newUser)
   }
 
   async loginLocalUser(email: string, password: string) {
-    const user = await userRepository.getByEmail(email)
+    const user = await userRepository.getOneByEmail(email)
 
     if (!user || !user.local_user) {
       throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
@@ -44,11 +44,11 @@ class AuthService {
     const { id: google_id, emails } = profile
     const email = emails![0].value
 
-    const user = await userRepository.getByGoogleId(google_id)
+    const user = await userRepository.getOneByGoogleId(google_id)
 
     if (!user) {
-      const newUser = await userRepository.create(email)
-      await googleUserRepository.create(newUser.id, google_id)
+      const newUser = await userRepository.createOne(email)
+      await googleUserRepository.createOne(newUser.id, google_id)
 
       return cleanUser(newUser)
     }
@@ -57,7 +57,7 @@ class AuthService {
   }
 
   async getAuthenticatedUser(id: string) {
-    const user = await userRepository.getById(id)
+    const user = await userRepository.getOneById(id)
 
     if (!user) {
       throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_DOESNT_EXIST)
