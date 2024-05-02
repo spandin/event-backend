@@ -2,8 +2,8 @@ import prisma from '../prisma.js'
 import { user } from '@prisma/client'
 
 class UserRepository {
-  async getByEmail(email: string) {
-    return await prisma.user.findFirst({
+  getByEmail(email: string) {
+    return prisma.user.findFirst({
       where: {
         email
       },
@@ -14,8 +14,8 @@ class UserRepository {
     })
   }
 
-  async getById(id: string) {
-    return await prisma.user.findFirst({
+  getById(id: string) {
+    return prisma.user.findUnique({
       where: {
         id
       },
@@ -26,8 +26,8 @@ class UserRepository {
     })
   }
 
-  async getByGoogleId(google_id: string) {
-    return await prisma.user.findFirst({
+  getByGoogleId(google_id: string) {
+    return prisma.user.findFirst({
       where: {
         google_user: {
           google_id
@@ -40,16 +40,16 @@ class UserRepository {
     })
   }
 
-  async create(email: string) {
-    return await prisma.user.create({
+  create(email: string) {
+    return prisma.user.create({
       data: {
         email
       }
     })
   }
 
-  async update(id: string, user: Partial<user>) {
-    return await prisma.user.update({
+  update(id: string, user: Partial<user>) {
+    return prisma.user.update({
       where: {
         id
       },
