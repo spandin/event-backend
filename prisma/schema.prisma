@@ -49,9 +49,9 @@ model event {
 model event_member {
   id String      @id @unique @default(uuid())
   purchases purchase[] 
-  user_id String @unique
+  user_id String 
   user user @relation(fields: [user_id], references: [id])
-  event_id String @unique
+  event_id String
   event event @relation(fields: [event_id], references: [id])
 }
 
