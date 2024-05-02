@@ -23,6 +23,18 @@ class EventController {
     }
   }
 
+  async getEventByEventId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const event_id = req.params.id
+
+      const event = await eventService.getEventByEventId(event_id)
+
+      return event
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async getEventsByUserId(req: Request, res: Response, next: NextFunction) {
     try {
       const events = await eventService.getEventsByUserId(req.user!.id)

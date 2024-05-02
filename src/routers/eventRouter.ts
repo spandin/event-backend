@@ -6,6 +6,7 @@ const eventRouter = express.Router()
 
 eventRouter.use(isUserAuthenticated)
 eventRouter.get('', eventController.getEventsByUserId)
+eventRouter.get(':id', eventController.getEventByEventId)
 eventRouter.post('', eventController.createEvent)
 
 export default eventRouter
