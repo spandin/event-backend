@@ -16,3 +16,11 @@ export const createEventSchema = z.object({
   location: z.string().optional(),
   date: z.date()
 })
+
+export const updateEventSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  location: z.string().optional(),
+  date: z.date().optional(),
+  isActive: z.boolean().optional()
+})
