@@ -25,7 +25,7 @@ class EventService {
   async createEvent(creator_id: string, data: CreateEvent) {
     const event = await eventRepository.createOne({ creator_id, ...data })
 
-    await this.addMemberToEvent(creator_id, event.id)
+    await this.addMemberToEvent(event.id, creator_id)
 
     return event
   }
@@ -59,7 +59,7 @@ class EventService {
       throw new ApiError(StatusCode.CONFLICT, ResponceMessage.EVENT_USER_ALREADY_MEMBER)
     }
 
-    const eventMember = await eventMemberRepository.createOne(user_id, event_id)
+    const eventMember = await eventMemberRepository.createOne(event_id, user_id)
 
     return eventMember
   }
