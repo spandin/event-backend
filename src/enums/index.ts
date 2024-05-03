@@ -19,6 +19,7 @@ export const enum ResponceMessage {
   USER_ALREADY_EXISTS = 'This email is already in use',
   USER_DOESNT_EXIST = `This user doesn't exist`,
   USER_WRONG_CREDENTIALS = 'The passed credentials are incorrect',
+  USER_NO_PERMISSION = `This user doesn't have the required permission`,
 
   EVENT_CREATED = 'Event successfully created',
   EVENT_DELETED = 'Event successfully deleted',
