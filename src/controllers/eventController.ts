@@ -49,7 +49,7 @@ class EventController {
     try {
       const id = req.params.id
 
-      const event = await eventService.deleteEvent(id)
+      const event = await eventService.deleteEvent(id, req.user!.id)
 
       res.status(+StatusCode.OK).send({ data: { event }, message: ResponceMessage.EVENT_DELETED })
     } catch (error) {
@@ -70,7 +70,7 @@ class EventController {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
-      const event = await eventService.updateEvent(id, data)
+      const event = await eventService.updateEvent(id, req.user!.id, data)
 
       res.status(+StatusCode.OK).send({ data: { event }, message: ResponceMessage.EVENT_UPDATED })
     } catch (error) {
@@ -88,7 +88,7 @@ class EventController {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
-      await eventService.addMemberToEvent(id, user_id)
+      await eventService.addMemberToEvent(id, req.user!.id, user_id)
 
       res.status(+StatusCode.OK).send({ message: ResponceMessage.EVENT_MEMBER_ADDED })
     } catch (error) {
@@ -106,7 +106,7 @@ class EventController {
         throw new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
       }
 
-      await eventService.deleteMemberFromEvent(id, user_id)
+      await eventService.deleteMemberFromEvent(id, req.user!.id, user_id)
 
       res.status(+StatusCode.OK).send({ message: ResponceMessage.EVENT_MEMBER_DELETED })
     } catch (error) {
