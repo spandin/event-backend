@@ -1,9 +1,12 @@
 import { event_member } from '@prisma/client'
+import { PrismaTransactionClient } from '../types/index.js'
 import prisma from '../prisma.js'
 
 class EventMemberRepository {
-  getAllByUserId(user_id: string) {
-    return prisma.event_member.findMany({
+  getAllByUserId(user_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.findMany({
       where: {
         user_id
       },
@@ -13,8 +16,10 @@ class EventMemberRepository {
     })
   }
 
-  getAllByEventId(event_id: string) {
-    return prisma.event_member.findMany({
+  getAllByEventId(event_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.findMany({
       where: {
         event_id
       },
@@ -24,8 +29,10 @@ class EventMemberRepository {
     })
   }
 
-  createOne(event_id: string, user_id: string) {
-    return prisma.event_member.create({
+  createOne(event_id: string, user_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.create({
       data: {
         user_id,
         event_id
@@ -33,8 +40,10 @@ class EventMemberRepository {
     })
   }
 
-  updateOneByEventIdAndUserId(event_id: string, user_id: string, data: Partial<event_member>) {
-    return prisma.event_member.updateMany({
+  updateOneByEventIdAndUserId(event_id: string, user_id: string, data: Partial<event_member>, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.updateMany({
       where: {
         event_id,
         user_id
@@ -43,24 +52,30 @@ class EventMemberRepository {
     })
   }
 
-  deleteAllByEventId(event_id: string) {
-    return prisma.event_member.deleteMany({
+  deleteAllByEventId(event_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.deleteMany({
       where: {
         event_id
       }
     })
   }
 
-  deleteAllByUserId(user_id: string) {
-    return prisma.event_member.deleteMany({
+  deleteAllByUserId(user_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.deleteMany({
       where: {
         user_id
       }
     })
   }
 
-  deleteOneByEventIdAndUserId(event_id: string, user_id: string) {
-    return prisma.event_member.deleteMany({
+  deleteOneByEventIdAndUserId(event_id: string, user_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event_member.deleteMany({
       where: {
         event_id,
         user_id

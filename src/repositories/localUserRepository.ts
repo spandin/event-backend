@@ -1,9 +1,12 @@
 import prisma from '../prisma.js'
 import { local_user } from '@prisma/client'
+import { PrismaTransactionClient } from '../types/index.js'
 
 class LocalUserRepository {
-  createOne(user_id: string, password: string) {
-    return prisma.local_user.create({
+  createOne(user_id: string, password: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.local_user.create({
       data: {
         password,
         user_id
@@ -11,8 +14,10 @@ class LocalUserRepository {
     })
   }
 
-  updateOne(user_id: string, user: Partial<local_user>) {
-    return prisma.local_user.update({
+  updateOne(user_id: string, user: Partial<local_user>, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.local_user.update({
       where: {
         user_id
       },

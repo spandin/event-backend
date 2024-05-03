@@ -1,9 +1,12 @@
 import prisma from '../prisma.js'
 import { user } from '@prisma/client'
+import { PrismaTransactionClient } from '../types/index.js'
 
 class UserRepository {
-  getOneByEmail(email: string) {
-    return prisma.user.findUnique({
+  getOneByEmail(email: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.user.findUnique({
       where: {
         email
       },
@@ -14,8 +17,10 @@ class UserRepository {
     })
   }
 
-  getOneById(id: string) {
-    return prisma.user.findUnique({
+  getOneById(id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.user.findUnique({
       where: {
         id
       },
@@ -26,8 +31,10 @@ class UserRepository {
     })
   }
 
-  getOneByGoogleId(google_id: string) {
-    return prisma.user.findFirst({
+  getOneByGoogleId(google_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.user.findFirst({
       where: {
         google_user: {
           google_id
@@ -40,16 +47,20 @@ class UserRepository {
     })
   }
 
-  createOne(email: string) {
-    return prisma.user.create({
+  createOne(email: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.user.create({
       data: {
         email
       }
     })
   }
 
-  updateOne(id: string, user: Partial<user>) {
-    return prisma.user.update({
+  updateOne(id: string, user: Partial<user>, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.user.update({
       where: {
         id
       },

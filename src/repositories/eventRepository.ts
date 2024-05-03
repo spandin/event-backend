@@ -1,4 +1,5 @@
 import { event } from '@prisma/client'
+import { PrismaTransactionClient } from '../types/index.js'
 import prisma from '../prisma.js'
 import { CreateEvent } from '../types/index.js'
 
@@ -7,8 +8,10 @@ type CreateEventWithCreatorId = CreateEvent & {
 }
 
 class EventRepository {
-  getAllByUserId(user_id: string) {
-    return prisma.event.findMany({
+  getAllByUserId(user_id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event.findMany({
       where: {
         members: {
           some: {
@@ -22,8 +25,10 @@ class EventRepository {
     })
   }
 
-  getOneByEventId(id: string) {
-    return prisma.event.findUnique({
+  getOneByEventId(id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event.findUnique({
       where: {
         id
       },
@@ -35,8 +40,10 @@ class EventRepository {
     })
   }
 
-  createOne({ creator_id, title, description, location, date }: CreateEventWithCreatorId) {
-    return prisma.event.create({
+  createOne({ creator_id, title, description, location, date }: CreateEventWithCreatorId, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event.create({
       data: {
         title,
         creator_id,
@@ -47,8 +54,10 @@ class EventRepository {
     })
   }
 
-  updateOne(id: string, data: Partial<event>) {
-    return prisma.event.update({
+  updateOne(id: string, data: Partial<event>, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event.update({
       where: {
         id
       },
@@ -56,8 +65,10 @@ class EventRepository {
     })
   }
 
-  deleteOne(id: string) {
-    return prisma.event.delete({
+  deleteOne(id: string, tx?: PrismaTransactionClient) {
+    const prismaInstance = tx || prisma
+
+    return prismaInstance.event.delete({
       where: { id }
     })
   }
