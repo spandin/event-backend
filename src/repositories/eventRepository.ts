@@ -4,7 +4,7 @@ import prisma from '../prisma.js'
 import { CreateEvent } from '../types/index.js'
 
 type CreateEventWithCreatorId = CreateEvent & {
-  creator_id: string
+  owner_id: string
 }
 
 class EventRepository {
@@ -20,7 +20,7 @@ class EventRepository {
         }
       },
       include: {
-        creator: true
+        owner: true
       }
     })
   }
@@ -33,20 +33,19 @@ class EventRepository {
         id
       },
       include: {
-        members: true,
-        purchases: true,
-        creator: true
+        owner: true,
+        members: true
       }
     })
   }
 
-  createOne({ creator_id, title, description, location, date }: CreateEventWithCreatorId, tx?: PrismaTransactionClient) {
+  createOne({ owner_id, title, description, location, date }: CreateEventWithCreatorId, tx?: PrismaTransactionClient) {
     const prismaInstance = tx || prisma
 
     return prismaInstance.event.create({
       data: {
         title,
-        creator_id,
+        owner_id,
         date,
         ...(description && { description }),
         ...(location && { location })
