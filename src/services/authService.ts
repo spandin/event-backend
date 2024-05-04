@@ -7,21 +7,24 @@ import cleanUser from '../utils/cleanUser.js'
 import localUserRepository from '../repositories/localUserRepository.js'
 import { Profile } from 'passport-google-oauth20'
 import googleUserRepository from '../repositories/googleUserRepository.js'
+import performTransaction from '../utils/performTransaction.js'
 
 class AuthService {
   async registerLocalUser(email: string, password: string) {
-    const user = await userRepository.getOneByEmail(email)
+    return performTransaction(async (tx) => {
+      const user = await userRepository.getOneByEmail(email, tx)
 
-    if (user) {
-      throw new ApiError(StatusCode.CONFLICT, ResponceMessage.USER_ALREADY_EXISTS)
-    }
+      if (user) {
+        throw new ApiError(StatusCode.CONFLICT, ResponceMessage.USER_ALREADY_EXISTS)
+      }
 
-    const hash = await bcrypt.hash(password, SALT_ROUNDS)
+      const hash = await bcrypt.hash(password, SALT_ROUNDS)
 
-    const newUser = await userRepository.createOne(email)
-    await localUserRepository.createOne(newUser.id, hash)
+      const newUser = await userRepository.createOne(email, tx)
+      await localUserRepository.createOne(newUser.id, hash, tx)
 
-    return cleanUser(newUser)
+      return cleanUser(newUser)
+    })
   }
 
   async loginLocalUser(email: string, password: string) {
@@ -44,16 +47,18 @@ class AuthService {
     const { id: google_id, emails } = profile
     const email = emails![0].value
 
-    const user = await userRepository.getOneByGoogleId(google_id)
+    return performTransaction(async (tx) => {
+      const user = await userRepository.getOneByGoogleId(google_id, tx)
 
-    if (!user) {
-      const newUser = await userRepository.createOne(email)
-      await googleUserRepository.createOne(newUser.id, google_id)
+      if (!user) {
+        const newUser = await userRepository.createOne(email, tx)
+        await googleUserRepository.createOne(newUser.id, google_id, tx)
 
-      return cleanUser(newUser)
-    }
+        return cleanUser(newUser)
+      }
 
-    return cleanUser(user)
+      return cleanUser(user)
+    })
   }
 
   async getAuthenticatedUser(id: string) {
