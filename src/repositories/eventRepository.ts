@@ -49,6 +49,9 @@ class EventRepository {
         date,
         ...(description && { description }),
         ...(location && { location })
+      },
+      include: {
+        members: true
       }
     })
   }
@@ -60,7 +63,10 @@ class EventRepository {
       where: {
         id
       },
-      data
+      data,
+      include: {
+        members: true
+      }
     })
   }
 
@@ -68,7 +74,10 @@ class EventRepository {
     const prismaInstance = tx || prisma
 
     return prismaInstance.event.delete({
-      where: { id }
+      where: { id },
+      include: {
+        members: true
+      }
     })
   }
 }
