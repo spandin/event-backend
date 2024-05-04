@@ -41,18 +41,20 @@ model event {
   isActive   Boolean  @default(true)
   members event_member[]
   purchases purchase[]
-  creator_id    String
-  creator       user     @relation(fields: [creator_id], references: [id]) 
+  owner_id    String
+  owner       user     @relation(fields: [owner_id], references: [id]) 
   created_at DateTime @default(now())
 }
 
 model event_member {
-  id String      @id @unique @default(uuid())
+  id String      @id @default(uuid())
   purchases purchase[] 
   user_id String 
   user user @relation(fields: [user_id], references: [id])
   event_id String
   event event @relation(fields: [event_id], references: [id])
+
+  @@unique([user_id, event_id])
 }
 
 model purchase {
