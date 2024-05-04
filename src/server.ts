@@ -1,35 +1,26 @@
 import express from 'express'
 import passport from 'passport'
 import routes from './routers/index.js'
-import session from 'express-session'
 import cors from 'cors'
 import './strategies/local-strategy.js'
 import './strategies/google-strategy.js'
-import { SESSION_CONFIG, CORS_CONFIG } from './config.js'
-import memorystore from 'memorystore'
+import { CORS_CONFIG } from './config.js'
+import { createServer } from 'http'
+import sessionParser from './sessionParser.js'
 
-const server = express()
+const app = express()
 
-server.enable('trust proxy')
+app.enable('trust proxy')
 
-server.use(cors(CORS_CONFIG))
-server.use(express.json())
+app.use(cors(CORS_CONFIG))
+app.use(express.json())
+app.use(sessionParser)
 
-const MemoryStore = memorystore(session)
-server.use(
-  session({
-    ...SESSION_CONFIG,
-    ...{
-      store: new MemoryStore({
-        checkPeriod: 86400000
-      })
-    }
-  })
-)
+app.use(passport.initialize())
+app.use(passport.session())
 
-server.use(passport.initialize())
-server.use(passport.session())
+app.use(routes)
 
-server.use(routes)
+const server = createServer()
 
 export default server
