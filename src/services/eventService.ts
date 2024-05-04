@@ -6,6 +6,7 @@ import eventRepository from '../repositories/eventRepository.js'
 import userRepository from '../repositories/userRepository.js'
 import { CreateEvent, UpdateEvent } from '../types/index.js'
 import ApiError from '../utils/apiError.js'
+import performTransaction from '../utils/performTransaction.js'
 
 class EventService {
   async getEventByEventId(event_id: string) {
@@ -20,14 +21,18 @@ class EventService {
     return eventRepository.getAllByUserId(user_id)
   }
 
-  async createEvent(creator_id: string, data: CreateEvent) {
-    const event = await eventRepository.createOne({ creator_id, ...data })
-    await this.addMemberToEvent(event.id, creator_id, creator_id)
+  async getEventMembersByEventId(event_id: string) {
+    return eventMemberRepository.getAllByEventId(event_id)
+  }
+
+  async createEvent(owner_id: string, data: CreateEvent) {
+    const event = await eventRepository.createOne({ owner_id, ...data })
+    await this.addMemberToEvent(event.id, owner_id, owner_id)
     return event
   }
 
   async deleteEvent(event_id: string, owner_id: string) {
-    return await prisma.$transaction(async (tx) => {
+    return performTransaction(async (tx) => {
       await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
 
       await eventMemberRepository.deleteAllByEventId(event_id, tx)
@@ -38,7 +43,7 @@ class EventService {
   }
 
   async updateEvent(event_id: string, owner_id: string, data: UpdateEvent) {
-    return await prisma.$transaction(async (tx) => {
+    return performTransaction(async (tx) => {
       await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
 
       const updatedEvent = await eventRepository.updateOne(event_id, data, tx)
@@ -47,7 +52,7 @@ class EventService {
   }
 
   async addMemberToEvent(event_id: string, owner_id: string, member_id: string) {
-    return await prisma.$transaction(async (tx) => {
+    return performTransaction(async (tx) => {
       await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
 
       const isUserAMember = await this.isUserAMember(event_id, member_id, tx)
@@ -61,7 +66,7 @@ class EventService {
   }
 
   async deleteMemberFromEvent(event_id: string, owner_id: string, member_id: string) {
-    return await prisma.$transaction(async (tx) => {
+    return performTransaction(async (tx) => {
       await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
 
       const isUserAMember = await this.isUserAMember(event_id, member_id, tx)
@@ -104,7 +109,7 @@ class EventService {
       throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.USER_DOESNT_EXIST)
     }
 
-    const isUserAnOwner = event.creator_id === user.id
+    const isUserAnOwner = event.owner_id === user.id
 
     if (!isUserAnOwner) {
       throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_NO_PERMISSION)
