@@ -1,6 +1,5 @@
-import { PrismaTransactionClient } from '../types/index.js'
+import { EventWithMembersOwner, PrismaTransactionClient, UserWithLocalGoogle } from '../types/index.js'
 import { ResponceMessage, StatusCode } from '../enums/index.js'
-import prisma from '../prisma.js'
 import eventMemberRepository from '../repositories/eventMemberRepository.js'
 import eventRepository from '../repositories/eventRepository.js'
 import userRepository from '../repositories/userRepository.js'
@@ -33,7 +32,7 @@ class EventService {
 
   async deleteEvent(event_id: string, owner_id: string) {
     return performTransaction(async (tx) => {
-      await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
+      await this.validateEventOwnership(event_id, owner_id, tx)
 
       await eventMemberRepository.deleteAllByEventId(event_id, tx)
 
@@ -44,7 +43,7 @@ class EventService {
 
   async updateEvent(event_id: string, owner_id: string, data: UpdateEvent) {
     return performTransaction(async (tx) => {
-      await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
+      await this.validateEventOwnership(event_id, owner_id, tx)
 
       const updatedEvent = await eventRepository.updateOne(event_id, data, tx)
       return updatedEvent
@@ -53,9 +52,11 @@ class EventService {
 
   async addMemberToEvent(event_id: string, owner_id: string, member_id: string) {
     return performTransaction(async (tx) => {
-      await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
+      const event = await this.validateEventByEventId(event_id, tx)
 
-      const isUserAMember = await this.isUserAMember(event_id, member_id, tx)
+      this.validateEventOwnership(event, owner_id)
+
+      const isUserAMember = await this.isUserAMember(event, member_id, tx)
       if (isUserAMember) {
         throw new ApiError(StatusCode.CONFLICT, ResponceMessage.EVENT_USER_ALREADY_MEMBER)
       }
@@ -67,9 +68,11 @@ class EventService {
 
   async deleteMemberFromEvent(event_id: string, owner_id: string, member_id: string) {
     return performTransaction(async (tx) => {
-      await this.validateEventExistenceAndOwnership(event_id, owner_id, tx)
+      const event = await this.validateEventByEventId(event_id, tx)
 
-      const isUserAMember = await this.isUserAMember(event_id, member_id, tx)
+      await this.validateEventOwnership(event, owner_id)
+
+      const isUserAMember = await this.isUserAMember(event, member_id, tx)
       if (!isUserAMember) {
         throw new ApiError(StatusCode.CONFLICT, ResponceMessage.EVENT_USER_NOT_MEMBER)
       }
@@ -79,41 +82,52 @@ class EventService {
     })
   }
 
-  private async isUserAMember(event_id: string, user_id: string, tx?: PrismaTransactionClient) {
-    const prismaInstance = tx || prisma
-
-    const event = await eventRepository.getOneByEventId(event_id, prismaInstance)
+  async validateEventByEventId(event_id: string, tx?: PrismaTransactionClient) {
+    const event = await eventRepository.getOneByEventId(event_id, tx)
     if (!event) {
       throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.EVENT_DOESNT_EXIST)
     }
-
-    const user = await userRepository.getOneById(user_id, prismaInstance)
-    if (!user) {
-      throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.USER_DOESNT_EXIST)
-    }
-
-    const isUserAMember = event.members.find((member) => member.user_id === user_id)
-    return isUserAMember
+    return event
   }
 
-  private async validateEventExistenceAndOwnership(event_id: string, user_id: string, tx?: PrismaTransactionClient) {
-    const prismaInstance = tx || prisma
-
-    const event = await eventRepository.getOneByEventId(event_id, prismaInstance)
-    if (!event) {
-      throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.EVENT_DOESNT_EXIST)
-    }
-
-    const user = await userRepository.getOneById(user_id, prismaInstance)
+  async validateUserByUserId(user_id: string, tx?: PrismaTransactionClient) {
+    const user = await userRepository.getOneById(user_id, tx)
     if (!user) {
       throw new ApiError(StatusCode.NOT_FOUND, ResponceMessage.USER_DOESNT_EXIST)
     }
+    return user
+  }
 
-    const isUserAnOwner = event.owner_id === user.id
+  private async validateEventOwnership(event: EventWithMembersOwner, owner_id: string): Promise<void>
+  private async validateEventOwnership(event_id: string, owner_id: string, tx: PrismaTransactionClient): Promise<void>
+  private async validateEventOwnership(
+    eventOrEventId: EventWithMembersOwner | string,
+    owner_id: string,
+    tx?: PrismaTransactionClient
+  ): Promise<void> {
+    const event = typeof eventOrEventId === 'string' ? await this.validateEventByEventId(eventOrEventId, tx) : eventOrEventId
 
+    const isUserAnOwner = event.owner_id === owner_id
     if (!isUserAnOwner) {
       throw new ApiError(StatusCode.UNAUTHORIZED, ResponceMessage.USER_NO_PERMISSION)
     }
+  }
+
+  private async isUserAMember(event_id: string, user_id: string, tx: PrismaTransactionClient): Promise<boolean>
+  private async isUserAMember(event: EventWithMembersOwner, user: UserWithLocalGoogle, tx: PrismaTransactionClient): Promise<boolean>
+  private async isUserAMember(event: EventWithMembersOwner, user_id: string, tx: PrismaTransactionClient): Promise<boolean>
+  private async isUserAMember(event_id: string, user: UserWithLocalGoogle, tx: PrismaTransactionClient): Promise<boolean>
+  private async isUserAMember(event: EventWithMembersOwner, user: UserWithLocalGoogle): Promise<boolean>
+  private async isUserAMember(
+    eventOrEventId: EventWithMembersOwner | string,
+    userOrUserId: UserWithLocalGoogle | string,
+    tx?: PrismaTransactionClient
+  ) {
+    const event = typeof eventOrEventId === 'string' ? await this.validateEventByEventId(eventOrEventId, tx) : eventOrEventId
+    const user = typeof userOrUserId === 'string' ? await this.validateUserByUserId(userOrUserId, tx) : userOrUserId
+
+    const isUserAMember = event.members.some((member) => member.user_id === user.id)
+    return isUserAMember
   }
 }
 
