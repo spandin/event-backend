@@ -43,10 +43,12 @@ class EventMemberRepository {
   updateOneByEventIdAndUserId(event_id: string, user_id: string, data: Partial<event_member>, tx?: PrismaTransactionClient) {
     const prismaInstance = tx || prisma
 
-    return prismaInstance.event_member.updateMany({
+    return prismaInstance.event_member.update({
       where: {
-        event_id,
-        user_id
+        user_id_event_id: {
+          user_id,
+          event_id
+        }
       },
       data
     })
@@ -75,10 +77,12 @@ class EventMemberRepository {
   deleteOneByEventIdAndUserId(event_id: string, user_id: string, tx?: PrismaTransactionClient) {
     const prismaInstance = tx || prisma
 
-    return prismaInstance.event_member.deleteMany({
+    return prismaInstance.event_member.delete({
       where: {
-        event_id,
-        user_id
+        user_id_event_id: {
+          user_id,
+          event_id
+        }
       }
     })
   }
