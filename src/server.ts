@@ -21,6 +21,6 @@ app.use(passport.session())
 
 app.use(routes)
 
-const server = createServer()
+const server = createServer(app)
 
 export default server

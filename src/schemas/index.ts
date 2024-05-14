@@ -18,9 +18,23 @@ export const createEventSchema = z.object({
 })
 
 export const updateEventSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
-  location: z.string().optional(),
-  date: z.coerce.date().optional(),
-  isActive: z.boolean().optional()
+  event_id: z.string(),
+  data: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    location: z.string().optional(),
+    date: z.coerce.date().optional(),
+    isArchived: z.boolean().optional()
+  })
 })
+
+export const addMemberToEventSchema = z.object({
+  event_id: z.string(),
+  member_id: z.string()
+})
+
+export const containsEventIdSchema = z.object({
+  event_id: z.string()
+})
+
+export const deleteMemberFromEventSchema = addMemberToEventSchema

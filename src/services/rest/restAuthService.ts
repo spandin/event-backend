@@ -1,13 +1,11 @@
 import bcrypt from 'bcrypt'
-import ApiError from '../utils/apiError.js'
-import { StatusCode, ResponceMessage } from '../enums/index.js'
-import { SALT_ROUNDS } from '../constants/index.js'
-import userRepository from '../repositories/userRepository.js'
-import cleanUser from '../utils/cleanUser.js'
-import localUserRepository from '../repositories/localUserRepository.js'
+import { StatusCode, ResponceMessage } from '../../enums/index.js'
+import { SALT_ROUNDS } from '../../constants/index.js'
+import userRepository from '../../repositories/userRepository.js'
+import localUserRepository from '../../repositories/localUserRepository.js'
 import { Profile } from 'passport-google-oauth20'
-import googleUserRepository from '../repositories/googleUserRepository.js'
-import performTransaction from '../utils/performTransaction.js'
+import googleUserRepository from '../../repositories/googleUserRepository.js'
+import { performTransaction, ApiError, cleanUser } from '../../utils/index.js'
 
 class AuthService {
   async registerLocalUser(email: string, password: string) {

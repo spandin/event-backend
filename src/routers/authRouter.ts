@@ -1,5 +1,5 @@
 import express from 'express'
-import authController from '../controllers/authController.js'
+import authController from '../controllers/rest/restAuthController.js'
 import passport from 'passport'
 import { isUserAuthenticated } from '../middleware/isUserAuthenticated.js'
 import { CLIENT_ORIGINS } from '../constants/index.js'

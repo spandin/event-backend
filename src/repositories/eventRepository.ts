@@ -51,7 +51,7 @@ class EventRepository {
         ...(location && { location })
       },
       include: {
-        members: true
+        owner: true
       }
     })
   }
@@ -65,7 +65,7 @@ class EventRepository {
       },
       data,
       include: {
-        members: true
+        owner: true
       }
     })
   }
@@ -76,7 +76,7 @@ class EventRepository {
     return prismaInstance.event.delete({
       where: { id },
       include: {
-        members: true
+        owner: true
       }
     })
   }

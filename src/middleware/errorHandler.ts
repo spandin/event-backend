@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express'
 import { StatusCode } from '../enums/index.js'
-import ApiError from '../utils/apiError.js'
+import { ApiError } from '../utils/index.js'
 
 export default (error: Error, req: Request, res: Response, next: NextFunction): void => {
   if (error instanceof ApiError) {

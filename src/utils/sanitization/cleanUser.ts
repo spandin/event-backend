@@ -1,6 +1,6 @@
 import { user as IUser } from '@prisma/client'
 
-export default (user: IUser) => {
+export const cleanUser = (user: IUser) => {
   const { id, email, avatar_url } = user
 
   return {

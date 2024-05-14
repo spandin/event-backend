@@ -11,7 +11,7 @@ class EventMemberRepository {
         user_id
       },
       include: {
-        event: true
+        user: true
       }
     })
   }
@@ -24,7 +24,7 @@ class EventMemberRepository {
         event_id
       },
       include: {
-        event: true
+        user: true
       }
     })
   }
@@ -36,6 +36,9 @@ class EventMemberRepository {
       data: {
         user_id,
         event_id
+      },
+      include: {
+        user: true
       }
     })
   }
@@ -50,7 +53,10 @@ class EventMemberRepository {
           event_id
         }
       },
-      data
+      data,
+      include: {
+        user: true
+      }
     })
   }
 
@@ -83,6 +89,9 @@ class EventMemberRepository {
           user_id,
           event_id
         }
+      },
+      include: {
+        user: true
       }
     })
   }

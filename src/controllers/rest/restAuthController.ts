@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
-import { ResponceMessage, StatusCode } from '../enums/index.js'
-import authService from '../services/authService.js'
-import { registrationSchema } from '../schemas/index.js'
-import { validateDataWithSchema } from '../utils/validateData.js'
+import { ResponceMessage, StatusCode } from '../../enums/index.js'
+import authService from '../../services/rest/restAuthService.js'
+import { registrationSchema } from '../../schemas/index.js'
+import { validateDataWithSchema } from '../../utils/schemas/validateDataWithSchema.js'
+import { ApiError } from '../../utils/index.js'
 
 class AuthController {
   async registerLocalUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, password } = validateDataWithSchema(registrationSchema, { email: req.body.email, password: req.body.password })
+      const { email, password } = validateDataWithSchema(
+        registrationSchema,
+        { email: req.body.email, password: req.body.password },
+        new ApiError(StatusCode.BAD_REQUEST, ResponceMessage.WRONG_PROPS)
+      )
 
       await authService.registerLocalUser(email, password)
 
