@@ -38,7 +38,7 @@ model event {
   description String?
   location String?
   totalCost  Int @default(0)
-  isActive   Boolean  @default(true)
+  isArchived   Boolean  @default(false)
   members event_member[]
   purchases purchase[]
   owner_id    String
